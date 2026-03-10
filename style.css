@@ -29,3 +29,17 @@
   font-size: 0.85rem;
   color: #666;
 }
+
+
+.main-content { 
+display: grid; 
+grid-template-columns: repeat(5, 1fr); 
+grid-template-rows: repeat(5, 1fr); 
+grid-column-gap: 0px;
+grid-row-gap: 0px; 
+}
+.file { grid-area: 1 / 1 / 2 / 2; } 
+.frequency-section{ grid-area: 2 / 1 / 6 / 3; } 
+.mapping-section { grid-area: 2 / 3 / 6 / 4; } 
+.hint-section { grid-area: 1 / 4 / 2 / 6; } 
+.output-section { grid-area: 2 / 4 / 6 / 6; } 

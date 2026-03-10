@@ -31,7 +31,9 @@ function analyzeText(text) {
   	displayFrequencies(sorted);
   	buildMappingTable(sorted);
   	const singles = findSingleLetterWords(currentText);
-	displayHints(singles);
+	const doubled = findDoubledLetters(currentText);
+	const freqWords = findFrequentWords(currentText);
+	displayHints(singles, doubled, freqWords);
   
 }
 
@@ -148,17 +150,48 @@ function findSingleLetterWords(text) {
 	return singles;
 }
 
-function displayHints(singles){
+function findDoubledLetters(text) {
+    const doubled = new Set();
+    for (let i = 0; i < text.length - 1; i++) {
+    	if (text[i] === text[i+1] && text[i] >= 'A' && text[i] <= 'Z') {
+     		doubled.add(text[i]);
+    	}
+  	}
+    return [...doubled];
+}
+
+function findFrequentWords(text) {
+    const words = text.split(/[\s.,;:!?]+/).filter(w => w.length > 0);
+    const freq = {};
+    for (const word of words) freq[word] = (freq[word] || 0) + 1;
+    return Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, 10);
+}
+
+function displayHints(singles, doubled, freqWords){
 	const section=document.getElementById('hint-section');
 	section.innerHTML='';
 
 	const div=document.createElement("div");
-    const print=document.createElement("p");
+    const single=document.createElement("p");
     if (singles.length === 0) {
-	    print.textContent = "Aucun mot d'une lettre trouvé.";
+	    single.textContent = "Aucun mot d'une lettre trouvé.";
 	} else {
-	    print.textContent = "Mots d'une lettre : " + singles.join(', ') + " → forcément A ou Y en français";
+	    single.textContent = "Mots d'une lettre : " + singles.join(', ') + " → forcément A ou Y en français";
 	}
-    div.appendChild(print);
+	const double=document.createElement("p");
+	if(doubled.length ===0){
+		double.textContent="Aucune suite de deux lettre trouvé.";
+	}else{
+		double.textContent= "Suite de deux lettre : " + doubled.join(', ') + " → peut-être SS, TT, MM, RR, PP, LL, FF";
+	}
+	const freq=document.createElement("p");
+	if(freqWords.length ===0){
+		freq.textContent="Aucune suite de deux lettre trouvé.";
+	}else{
+		freq.textContent = "Mots fréquents : " + freqWords.map(([w, c]) => `${w}(${c})`).join(', ');
+	}
+    div.appendChild(single);
+    div.appendChild(double);
+    div.appendChild(freq);
     section.appendChild(div);
 }
