@@ -1,0 +1,164 @@
+console.log("app chargée");
+
+let currentText = '';
+
+document.getElementById('txtFile').addEventListener('change',(e) =>{
+	const file=e.target.files[0];
+	if (!file) return;
+
+	const reader= new FileReader();
+
+	reader.onload=(event) =>{
+		const text= event.target.result;
+		analyzeText(text);
+	}
+
+	reader.readAsText(file);
+});
+
+document.getElementById('startButton').addEventListener('click', (e)=>{
+	const text = document.getElementById('txtTextarea').value;
+	analyzeText(text);
+});
+
+
+function analyzeText(text) {
+  	console.log("Texte reçu :", text.substring(0, 100));
+  	currentText = text.toUpperCase();
+  	const freq=computeFrequencies(text);
+  	console.log(freq);
+  	const sorted = Object.entries(freq).sort((a, b) => b[1] - a[1]);
+  	displayFrequencies(sorted);
+  	buildMappingTable(sorted);
+  	const singles = findSingleLetterWords(currentText);
+	displayHints(singles);
+  
+}
+
+function computeFrequencies(text) {
+	const freq={};
+
+	for(const char of text){
+		if (char >= 'A' && char <= 'Z'){
+			freq[char] = (freq[char] || 0) + 1;
+		}
+	}
+	return freq;
+
+}
+
+function displayFrequencies(sorted) {
+	const section = document.getElementById('frequency-section');
+	section.innerHTML = ''; 
+
+	const max = sorted[0][1];
+
+	for (const [letter, count] of sorted) {
+	    const percent = (count / max) * 100;
+
+	    const div=document.createElement("div");
+	    div.classList.add("freq-row");
+	    const spanLettre=document.createElement("span");
+	    spanLettre.classList.add("freq-letter");
+	    spanLettre.textContent=letter;
+	    const divBar=document.createElement("div");
+	    divBar.classList.add("freq-bar");
+	    divBar.style.width = percent + '%';
+	    const spanNb=document.createElement("span");
+	    spanNb.classList.add("freq-count");
+	    spanNb.textContent=count;
+	    div.appendChild(spanLettre);
+	    div.appendChild(divBar);
+	    div.appendChild(spanNb);
+	    section.appendChild(div);
+	}
+}
+
+
+function buildMappingTable(sorted){
+	const section=document.getElementById('mapping-section');
+	section.innerHTML = '';
+
+	for(const [letter, count] of sorted){
+		const div=document.createElement("div");
+		div.classList.add("mapping-row");
+		const spanLettre=document.createElement("span");
+		spanLettre.classList.add("cipher-letter");
+		spanLettre.textContent=letter;
+		const spanRow=document.createElement("span");
+		spanRow.textContent="→";
+		const input=document.createElement("input");
+		input.classList.add("plain-input");
+		input.setAttribute('data-cipher', letter);
+		input.setAttribute('maxlength', '1');
+		input.setAttribute('placeholder', '?');
+		input.addEventListener('input', () => {
+		  input.value = input.value.toUpperCase();
+		  updateOutput();
+		});
+
+		div.appendChild(spanLettre);
+		div.appendChild(spanRow);
+		div.appendChild(input);
+		section.appendChild(div);
+
+	}
+}
+
+function updateOutput() {
+    console.log("mapping changé");
+
+    const mapping=getMapping();
+    let result = '';
+  
+    for (const char of currentText) {
+	    if (mapping[char]) {
+	      result += mapping[char];
+	    } else if (char >= 'A' && char <= 'Z') {
+	      result += '_'; 
+	    } else {
+	      result += char; 
+	    }
+    }
+  
+
+    const section=document.getElementById('output-section');
+    section.innerHTML='';
+
+    const div=document.createElement("div");
+    const print=document.createElement("p");
+    print.textContent=result;
+    div.appendChild(print);
+    section.appendChild(div);
+}
+
+function getMapping() {
+    const mapping = {};
+  	document.querySelectorAll('.plain-input').forEach(input => {
+	    const cipher = input.getAttribute('data-cipher');
+	    const plain = input.value;
+	    if (plain) mapping[cipher] = plain;
+	});
+    return mapping;
+}
+
+function findSingleLetterWords(text) {
+	const words = text.split(/[\s.,;:!?]+/);
+	const singles = [...new Set(words.filter(w => w.length === 1 && w >= 'A' && w <= 'Z'))];
+	return singles;
+}
+
+function displayHints(singles){
+	const section=document.getElementById('hint-section');
+	section.innerHTML='';
+
+	const div=document.createElement("div");
+    const print=document.createElement("p");
+    if (singles.length === 0) {
+	    print.textContent = "Aucun mot d'une lettre trouvé.";
+	} else {
+	    print.textContent = "Mots d'une lettre : " + singles.join(', ') + " → forcément A ou Y en français";
+	}
+    div.appendChild(print);
+    section.appendChild(div);
+}

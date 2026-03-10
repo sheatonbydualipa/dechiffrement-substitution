@@ -1,0 +1,31 @@
+#frequency-section {
+  padding: 1rem;
+}
+
+.freq-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.freq-letter {
+  font-family: 'Inconsolata', monospace;
+  font-weight: 700;
+  width: 20px;
+  text-align: center;
+}
+
+.freq-bar {
+  height: 16px;
+  background-color: #4a90d9;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+  min-width: 2px;
+}
+
+.freq-count {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.85rem;
+  color: #666;
+}

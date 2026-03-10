@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Déchiffrage par substitution</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;600;700&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Déchiffrage</h1>
+        </header>
+
+        <div class="main-content">
+            <div class="control-panel">
+                <div class="section">
+                    <div class="section-title">1. Fichier</div>
+                    <div class="input-section">
+                        <button class="file-input-button">Charger un fichier</button>
+                        <input type="file" id="txtFile" accept=".txt">
+                    </div>
+                    <div class="file-name" id="fileName"></div>
+                    
+                    <div class="paste-section">
+                        <div class="paste-label">ou copier-coller le fichier :</div>
+                        <textarea id="txtTextarea" class="txt-textarea" placeholder="Collez votre TXT ici..."></textarea>
+                    </div>
+                </div>
+
+                <div class="frequency-section" id="frequency-section">
+                    
+                </div>
+
+                <div class="mapping-section" id="mapping-section">
+
+                </div>
+
+                <div class="hint-section" id="hint-section">
+
+                </div>
+
+                <div class="output-section" id="output-section">
+
+                </div>
+
+                <button class="start-button" id="startButton">
+                    Analysé
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
