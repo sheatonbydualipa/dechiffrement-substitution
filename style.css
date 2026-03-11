@@ -43,3 +43,9 @@ grid-row-gap: 0px;
 .mapping-section { grid-area: 2 / 3 / 6 / 4; } 
 .hint-section { grid-area: 1 / 4 / 2 / 6; } 
 .output-section { grid-area: 2 / 4 / 6 / 6; } 
+
+
+#output-section {
+  max-height: 300px;
+  overflow-y: scroll;
+}

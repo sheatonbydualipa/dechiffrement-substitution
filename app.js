@@ -33,7 +33,9 @@ function analyzeText(text) {
   	const singles = findSingleLetterWords(currentText);
 	const doubled = findDoubledLetters(currentText);
 	const freqWords = findFrequentWords(currentText);
-	displayHints(singles, doubled, freqWords);
+	const apostrophe = findApostrophe(currentText);
+	displayHints(singles, doubled, freqWords, apostrophe);
+	updateOutput();
   
 }
 
@@ -108,8 +110,6 @@ function buildMappingTable(sorted){
 }
 
 function updateOutput() {
-    console.log("mapping changé");
-
     const mapping=getMapping();
     let result = '';
   
@@ -167,7 +167,17 @@ function findFrequentWords(text) {
     return Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, 10);
 }
 
-function displayHints(singles, doubled, freqWords){
+function findApostrophe(text) {
+	const apostrophe = new Set();
+	for(let i=0; i<text.length-1;i++){
+		if(text[i+1]=="'" && text[i]>='A' && text[i]<='Z'){
+			apostrophe.add(text[i]);
+		}
+	}
+	return [...apostrophe];
+}
+
+function displayHints(singles, doubled, freqWords, apostrophe){
 	const section=document.getElementById('hint-section');
 	section.innerHTML='';
 
@@ -190,8 +200,15 @@ function displayHints(singles, doubled, freqWords){
 	}else{
 		freq.textContent = "Mots fréquents : " + freqWords.map(([w, c]) => `${w}(${c})`).join(', ');
 	}
+	const apost=document.createElement("p");
+	if(apostrophe.length ===0){
+		apost.textContent="Aucun apostrophe trouvé";
+	}else{
+		apost.textContent = "Lettre devant un apostrophe " + apostrophe.join(', ') + " → peut-être D,S,J,T,L,N,M,C";
+	}
     div.appendChild(single);
     div.appendChild(double);
     div.appendChild(freq);
+    div.appendChild(apost);
     section.appendChild(div);
 }
