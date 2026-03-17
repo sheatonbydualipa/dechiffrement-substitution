@@ -1,5 +1,3 @@
-console.log("app chargée");
-
 let currentText = '';
 
 document.getElementById('txtFile').addEventListener('change',(e) =>{
@@ -23,10 +21,8 @@ document.getElementById('startButton').addEventListener('click', (e)=>{
 
 
 function analyzeText(text) {
-  	console.log("Texte reçu :", text.substring(0, 100));
   	currentText = text.toUpperCase();
   	const freq=computeFrequencies(text);
-  	console.log(freq);
   	const sorted = Object.entries(freq).sort((a, b) => b[1] - a[1]);
   	displayFrequencies(sorted);
   	buildMappingTable(sorted);
@@ -97,7 +93,7 @@ function buildMappingTable(sorted){
 		input.setAttribute('maxlength', '1');
 		input.setAttribute('placeholder', '?');
 		input.addEventListener('input', () => {
-		  input.value = input.value.toUpperCase();
+		  input.value = input.value;
 		  updateOutput();
 		});
 
@@ -116,9 +112,7 @@ function updateOutput() {
     for (const char of currentText) {
 	    if (mapping[char]) {
 	      result += mapping[char];
-	    } else if (char >= 'A' && char <= 'Z') {
-	      result += '_'; 
-	    } else {
+	    }else {
 	      result += char; 
 	    }
     }
@@ -192,7 +186,7 @@ function displayHints(singles, doubled, freqWords, apostrophe){
 	if(doubled.length ===0){
 		double.textContent="Aucune suite de deux lettre trouvé.";
 	}else{
-		double.textContent= "Suite de deux lettre : " + doubled.join(', ') + " → peut-être SS, TT, MM, RR, PP, LL, FF";
+		double.textContent= "Suite de deux lettre : " + doubled.join(', ') + " → peut-être SS, TT, MM, RR, PP, LL, FF, CC, DD";
 	}
 	const freq=document.createElement("p");
 	if(freqWords.length ===0){
